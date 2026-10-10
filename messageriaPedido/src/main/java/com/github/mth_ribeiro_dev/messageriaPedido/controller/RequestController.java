@@ -13,11 +13,11 @@ public class RequestController {
 
     @PostMapping("/request")
     public void request(){
+        System.out.println("request receive");
         serviceEmail.post()
                 .uri("/api/v1/email")
                 .retrieve()
                 .toBodilessEntity();
 
-        System.out.println("request sent");
     }
 }
