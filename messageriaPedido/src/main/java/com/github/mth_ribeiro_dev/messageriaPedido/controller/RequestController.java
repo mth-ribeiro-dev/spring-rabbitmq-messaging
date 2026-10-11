@@ -1,23 +1,27 @@
 package com.github.mth_ribeiro_dev.messageriaPedido.controller;
 
+import com.github.mth_ribeiro_dev.messageriaPedido.config.MessagePublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestClient;
 
 @RestController
 @RequestMapping("api/v1")
 public class RequestController {
 
-    private final RestClient serviceEmail = RestClient.create("http://localhost:8081");
+    private final MessagePublisher messagePublisher;
+    private static final Logger log = LoggerFactory.getLogger(RequestController.class);
+
+
+    public RequestController(MessagePublisher messagePublisher){
+        this.messagePublisher = messagePublisher;
+    }
 
     @PostMapping("/request")
     public void request(){
-        System.out.println("request receive");
-        serviceEmail.post()
-                .uri("/api/v1/email")
-                .retrieve()
-                .toBodilessEntity();
-
+        messagePublisher.enqueue("order created");
+        log.info("request send");
     }
 }
